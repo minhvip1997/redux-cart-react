@@ -10,10 +10,12 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import {
     Link, NavLink
 } from "react-router-dom";
+import { allItemsCountSelector } from "../redux/selector";
+import { useSelector  } from 'react-redux';
 
 export default function NavBars(){
   const dispatch = useDispatch();
-
+  const itemCount = useSelector(allItemsCountSelector);
 
   return (
     <div className="topnav">
@@ -24,7 +26,7 @@ export default function NavBars(){
             Product
         </NavLink>
         <NavLink to="/carts" activeClassName="active" id="cart" className="cis-cart">
-        <Badge color="secondary">
+        <Badge color="secondary" badgeContent={itemCount}>
           <ShoppingCartIcon />
         </Badge>
         </NavLink>

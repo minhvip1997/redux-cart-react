@@ -1,14 +1,25 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector  } from 'react-redux';
+import { allProductsSelector } from '../redux/selector';
 import "./Product.css";
+import { addProduct } from '../redux/action';
 
 
 
 export default function Products() {
 
   const dispatch = useDispatch();
+  const productList = useSelector(allProductsSelector);
 
-
+  const handleAddButtonClick = (item)=>{
+    dispatch(addProduct({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: 1,
+      totalprice: item.price * 1
+    }))
+  }
   return (
     <div>
         <table>
@@ -20,54 +31,20 @@ export default function Products() {
             </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-            <td>
-                <button>Add</button>
-            </td>
-        </tr>
-        <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-            <td>
-                <button>Add</button>
-            </td>
-        </tr>
-        <tr>
-            <td>Ernst Handel</td>
-            <td>Roland Mendel</td>
-            <td>Austria</td>
-            <td>
-                <button>Add</button>
-            </td>
-        </tr>
-        <tr>
-            <td>Island Trading</td>
-            <td>Helen Bennett</td>
-            <td>UK</td>
-            <td>
-                <button>Add</button>
-            </td>
-        </tr>
-        <tr>
-            <td>Laughing Bacchus Winecellars</td>
-            <td>Yoshi Tannamuri</td>
-            <td>Canada</td>
-            <td>
-                <button>Add</button>
-            </td>
-        </tr>
-        <tr>
-            <td>Magazzini Alimentari Riuniti</td>
-            <td>Giovanni Rovelli</td>
-            <td>Italy</td>
-            <td>
-                <button>Add</button>
-            </td>
-        </tr>
+        
+        {productList.length>0 && productList.map((item,index)=>{
+            return (
+                <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.name}</td>
+                    <td>{item.price}</td>
+                    <td>
+                        <button onClick={()=>handleAddButtonClick(item)}>Add</button>
+                    </td>
+                </tr>
+            )
+        })
+        }
         </tbody>
 </table>
     </div>

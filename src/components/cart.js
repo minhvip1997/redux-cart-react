@@ -1,18 +1,43 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Badge from "@material-ui/core/Badge";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { allCartsSelector, TotalCartPriceSelector } from '../redux/selector';
+import { decrementQuantity, incrementQuantity } from '../redux/action';
 
 
 
 export default function Carts() {
 
   const dispatch = useDispatch();
+  const cartList = useSelector(allCartsSelector);
+  const TotalCartPrice = useSelector(TotalCartPriceSelector);
+  const handleAddButtonClick = (item)=>{
+    dispatch(incrementQuantity({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity+1
+    }))
+    // console.log(item)
+  }
 
+  const handleSubtractButtonClick = (item)=>{
+    // if(item.quantity <1 ){
+    //   item.quantity =
+    // }
+    dispatch(decrementQuantity({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity-1
+    }))
+    // console.log(item)
+  }
 
   return (
     <div>
@@ -26,104 +51,28 @@ export default function Carts() {
             </tr>
         </thead>
         <tbody>
+        {cartList.length>0  && cartList.map((item,index)=>{
+            return(
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.name}</td>
+                <td>
+                <Button onClick={()=>handleSubtractButtonClick(item)}>
+                {" "}
+                <RemoveIcon fontSize="small" />
+                </Button>
+                <span>{item.quantity}</span>
+                <Button onClick={()=>handleAddButtonClick(item)}>
+                {" "}
+                <AddIcon fontSize="small" />
+              </Button>
+                </td>
+                <td>{item.totalprice}</td>
+              </tr>
+            )
+        })}
         <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>
-            <Button>
-            {" "}
-            <RemoveIcon fontSize="small" />
-            </Button>
-            Germany
-            <Button>
-            {" "}
-            <AddIcon fontSize="small" />
-          </Button>
-            </td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>
-            <Button>
-            {" "}
-            <RemoveIcon fontSize="small" />
-            </Button>
-            Germany
-            <Button>
-            {" "}
-            <AddIcon fontSize="small" />
-            </Button>
-            </td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-            <td>Ernst Handel</td>
-            <td>Roland Mendel</td>
-            <td>
-            <Button>
-            {" "}
-            <RemoveIcon fontSize="small" />
-            </Button>
-            Germany
-            <Button>
-            {" "}
-            <AddIcon fontSize="small" />
-            </Button>
-            </td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-            <td>Island Trading</td>
-            <td>Helen Bennett</td>
-            <td>
-            <Button>
-            {" "}
-            <RemoveIcon fontSize="small" />
-            </Button>
-            Germany
-            <Button>
-            {" "}
-            <AddIcon fontSize="small" />
-            </Button>
-            </td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-            <td>Laughing Bacchus Winecellars</td>
-            <td>Yoshi Tannamuri</td>
-            <td>
-            <Button>
-            {" "}
-            <RemoveIcon fontSize="small" />
-            </Button>
-            Germany
-            <Button>
-            {" "}
-            <AddIcon fontSize="small" />
-            </Button>
-            </td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-            <td>Magazzini Alimentari Riuniti</td>
-            <td>Giovanni Rovelli</td>
-            <td>
-            <Button>
-            {" "}
-            <RemoveIcon fontSize="small" />
-            </Button>
-            Germany
-            <Button>
-            {" "}
-            <AddIcon fontSize="small" />
-            </Button>
-            </td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-          <th id='totalprice' colSpan="4">Total Price:</th>
+          <th id='totalprice' colSpan="4">Total Price: {TotalCartPrice}</th>
         </tr>
         </tbody>
 </table>
