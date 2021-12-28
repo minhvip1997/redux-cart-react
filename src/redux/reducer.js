@@ -9,26 +9,66 @@ const initState = {
         {id: 5, name: 'learn english', price: 500},
         {id: 6, name: 'learn java', price: 600},
     ],
-    carts:[],
+    carts:  localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [],
     itemCount: 0,
-    totalCartPrice: 0
+    totalCartPrice: 0,
+    
 }
 
 const rootReducer = (state = initState,action)=>{
+  
     switch (action.type) {
+      
         case TypeAction.ADD_PRODUCTS:
-          let sum = state.totalCartPrice;
-          sum+=action.payload.totalprice
-          return {
-            ...state,
-            carts: [...state.carts,action.payload],
-            itemCount: state.itemCount+1,
-            totalCartPrice: sum
-          }
           
+          let sum = state.totalCartPrice;
+          sum+=action.payload.totalprice;
+          
+          if(state.itemCount==0){
+            let cart = {
+                id:action.payload.id,
+                quantity:1,
+                name:action.payload.name,
+                price:action.payload.price,
+                totalprice: action.payload.price,
+
+            }
+            state.carts.push(cart);
+        }
+        else{
+            let check = false;
+
+             state.carts.map((item,key)=>{
+                if(item.id==action.payload.id){
+                  state.carts[key].totalprice = state.carts[key].totalprice + item.price
+                  state.carts[key].quantity++;
+                  check=true;
+   
+                }
+            });
+            console.log(state.carts)
+            
+            if(!check){
+                let _cart = {
+                    id:action.payload.id,
+                    quantity:1,
+                    name:action.payload.name,
+                    price:action.payload.price,
+                    totalprice: action.payload.price
+                }
+                state.carts.push(_cart);
+            }
+            
+        }
+        return{
+          ...state,
+          carts : state.carts,
+          itemCount: state.itemCount+1,
+          totalCartPrice: sum
+        }
+
         case TypeAction.INCREMENT_QUANTITY:
           let item = state.carts.find(item => item.id === action.payload.id);
-          console.log(item)
           if (item) {
             return {
               ...state,
@@ -42,9 +82,11 @@ const rootReducer = (state = initState,action)=>{
               ),
               totalCartPrice: state.totalCartPrice + item.price,
             };
+            
           }
         case TypeAction.DECREMENT_QUANTITY:
           let item2 = state.carts.find(item => item.id === action.payload.id);
+          
           console.log(item2)
           let less = action.payload.quantity <1 ? 1 :action.payload.quantity ;
           if (item2) {
@@ -64,6 +106,8 @@ const rootReducer = (state = initState,action)=>{
         default:
           return state
       }
+
+      
 }
 
 
