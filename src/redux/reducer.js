@@ -3,6 +3,7 @@ import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { persistStore, persistReducer } from 'redux-persist';
 
+
 const initState = {
     products:[
         {id: 1, name: 'learn yoga', price: 100},
@@ -33,50 +34,39 @@ const rootReducer = (state = initState,action)=>{
       
         case TypeAction.ADD_PRODUCTS:
           
-          let sum = state.totalCartPrice;
-          sum+=action.payload.totalprice;
-          
-          if(state.itemCount==0){
-            let cart = {
-                id:action.payload.id,
-                quantity:1,
-                name:action.payload.name,
-                price:action.payload.price,
-                totalprice: action.payload.price,
+        let sum = state.totalCartPrice;
+        sum+=action.payload.totalprice;
 
-            }
-            state.carts.push(cart);
-        }
-        else{
-            let check = false;
+        const inCart = state.carts.some(item => item.id === action.payload.id);
 
-             state.carts.map((item,key)=>{
-                if(item.id==action.payload.id){
-                  state.carts[key].totalprice = state.carts[key].totalprice + item.price
-                  state.carts[key].quantity++;
-                  check=true;
-   
-                }
-            });
-            console.log(state.carts)
-            
-            if(!check){
-                let _cart = {
-                    id:action.payload.id,
-                    quantity:1,
-                    name:action.payload.name,
-                    price:action.payload.price,
-                    totalprice: action.payload.price
-                }
-                state.carts.push(_cart);
-            }
-            
-        }
-        return{
-          ...state,
-          carts : state.carts,
-          itemCount: state.itemCount+1,
-          totalCartPrice: sum
+        if (inCart) {
+          return {
+            ...state,
+            carts: state.carts.map(item => item.id === action.payload.id ? {
+
+              ...item,
+              quantity: item.quantity + 1,
+              totalprice: item.price + item.price
+            } : item),
+            itemCount: state.itemCount+1,
+            totalCartPrice: sum
+          }
+        } else {
+          return {
+            ...state,
+            carts: [
+
+              ...state.carts,
+              {
+                id: action.payload.id,
+                quantity: action.payload.quantity,
+                name: action.payload.name,
+                price: action.payload.price,
+              }
+            ],
+            itemCount: state.itemCount+1,
+            totalCartPrice: sum
+          }
         }
 
         case TypeAction.INCREMENT_QUANTITY:
