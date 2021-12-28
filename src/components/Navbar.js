@@ -25,6 +25,9 @@ export default function NavBars(){
         <NavLink to="products" activeClassName="active">
             Product
         </NavLink>
+        <NavLink to="login" activeClassName="active">
+            Login
+        </NavLink>
         <NavLink to="/carts" activeClassName="active" id="cart" className="cis-cart">
         <Badge color="secondary" badgeContent={itemCount}>
           <ShoppingCartIcon />

@@ -10,6 +10,7 @@ import {
   Route,
   useParams
 } from "react-router-dom";
+import Login from './components/login';
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
       </Route>
       <Route path="/carts">
         <Carts />
+      </Route>
+      <Route path="/login">
+        <Login />
       </Route>
     </Switch>
       </header>
