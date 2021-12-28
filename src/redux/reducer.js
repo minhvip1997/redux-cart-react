@@ -62,6 +62,7 @@ const rootReducer = (state = initState,action)=>{
                 quantity: action.payload.quantity,
                 name: action.payload.name,
                 price: action.payload.price,
+                totalprice: action.payload.price
               }
             ],
             itemCount: state.itemCount+1,
