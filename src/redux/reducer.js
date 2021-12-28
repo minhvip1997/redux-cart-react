@@ -1,4 +1,7 @@
 import TypeAction from "../constant/index";
+import storage from 'redux-persist/lib/storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import { persistStore, persistReducer } from 'redux-persist';
 
 const initState = {
     products:[
@@ -9,11 +12,20 @@ const initState = {
         {id: 5, name: 'learn english', price: 500},
         {id: 6, name: 'learn java', price: 600},
     ],
-    carts:  localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [],
+    carts:   [],
     itemCount: 0,
     totalCartPrice: 0,
     
 }
+
+const persistConfig = {
+  key: 'root',
+  storage: storage,
+  whitelist: ['itemCount','carts','totalCartPrice'],
+  stateReconciler: autoMergeLevel2 // Xem thêm tại mục "Quá trình merge".
+ };
+
+
 
 const rootReducer = (state = initState,action)=>{
   
@@ -109,6 +121,6 @@ const rootReducer = (state = initState,action)=>{
 
       
 }
+const pReducer = persistReducer(persistConfig, rootReducer);
 
-
-export default rootReducer;
+export {rootReducer,pReducer};
