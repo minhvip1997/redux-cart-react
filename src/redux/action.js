@@ -22,3 +22,17 @@ export const decrementQuantity = (data) =>{
         payload: data
     }
 }
+
+export const login = (data) =>{
+    return {
+        type: TypeAction.LOGIN,
+        payload: data
+    }
+}
+
+export const logout = (data) =>{
+    return {
+        type: TypeAction.LOGOUT,
+        payload: data
+    }
+}
