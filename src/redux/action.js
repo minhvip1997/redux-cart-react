@@ -1,38 +1,45 @@
-import TypeAction from "../constant/index";
+import ActionTypes  from "../constant/index";
 
 
 
 export const addProduct = (data) =>{
     return {
-        type: TypeAction.ADD_PRODUCTS,
+        type: ActionTypes.ADD_PRODUCTS,
         payload: data
     }
 }
 
 export const incrementQuantity = (data) =>{
     return {
-        type: TypeAction.INCREMENT_QUANTITY,
+        type: ActionTypes.INCREMENT_QUANTITY,
         payload: data
     }
 }
 
 export const decrementQuantity = (data) =>{
     return {
-        type: TypeAction.DECREMENT_QUANTITY,
+        type: ActionTypes.DECREMENT_QUANTITY,
         payload: data
     }
 }
 
-export const login = (data) =>{
+export const login_success = (data) =>{
     return {
-        type: TypeAction.LOGIN,
+        type: ActionTypes.LOGIN_SUCCESS,
+        payload: data
+    }
+}
+
+export const login_error = (data) =>{
+    return {
+        type: ActionTypes.LOGIN_ERROR,
         payload: data
     }
 }
 
 export const logout = (data) =>{
     return {
-        type: TypeAction.LOGOUT,
+        type: ActionTypes.LOGOUT,
         payload: data
     }
 }

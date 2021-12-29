@@ -2,8 +2,11 @@ const  ActionTypes = {
     ADD_PRODUCTS : "ADD_PRODUCTS",
     INCREMENT_QUANTITY : "INCREMENT_QUANTITY",
     DECREMENT_QUANTITY : "DECREMENT_QUANTITY",
-    LOGIN : "LOGIN",
+    LOGIN_SUCCESS : "LOGIN_SUCCESS",
+    LOGIN_ERROR : "LOGIN_ERROR",
     LOGOUT: "LOGOUT",
     
 }
+
+
 export default ActionTypes;

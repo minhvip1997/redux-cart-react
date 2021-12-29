@@ -29,3 +29,10 @@
   top: 0px !important;
   right: 0px !important;
 }
+.userLogin{
+  position: fixed;
+  top: 20px !important;
+  right: 100px !important;
+  color: #aa040c;
+  background-color: #04AA6D;
+}
