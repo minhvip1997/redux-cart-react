@@ -35,7 +35,7 @@ export default function Carts() {
       
     }
     setTotalOrderPrice(totalprice);
-  })
+  },[cartList])
   
 
   const handleSubtractButtonClick = (item)=>{
