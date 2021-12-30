@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Badge from "@material-ui/core/Badge";
@@ -16,7 +16,9 @@ export default function Carts() {
   const dispatch = useDispatch();
   const cartList = useSelector(allCartsSelector);
   const TotalCartPrice = useSelector(TotalCartPriceSelector);
+  const [totalOrderPrice, setTotalOrderPrice] = useState(0);
   const handleAddButtonClick = (item)=>{
+    console.log(item)
     dispatch(incrementQuantity({
       id: item.id,
       name: item.name,
@@ -25,11 +27,19 @@ export default function Carts() {
     }))
     // console.log(item)
   }
+  useEffect(()=>{
+    let totalprice = 0;
+    for (var key of Object.keys(cartList)) {
+    
+    totalprice+=cartList[key].totalprice
+      
+    }
+    setTotalOrderPrice(totalprice);
+  })
+  
 
   const handleSubtractButtonClick = (item)=>{
-    // if(item.quantity <1 ){
-    //   item.quantity =
-    // }
+    
     dispatch(decrementQuantity({
       id: item.id,
       name: item.name,
@@ -38,6 +48,11 @@ export default function Carts() {
     }))
     // console.log(item)
   }
+
+  // function totalOrderPrice(item){
+  //   let a = 0;
+    
+  // }
 
   return (
     <div>
@@ -51,28 +66,30 @@ export default function Carts() {
             </tr>
         </thead>
         <tbody>
-        {cartList.length>0  && cartList.map((item,index)=>{
-            return(
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
+        
+        {Object.keys(cartList).map(function(key, index){
+          
+          return(
+              <tr key={key}>
+                <td>{cartList[key].id}</td>
+                <td>{cartList[key].name}</td>
                 <td>
-                <Button onClick={()=>handleSubtractButtonClick(item)}>
+                <Button onClick={()=>handleSubtractButtonClick(cartList[key])}>
                 {" "}
                 <RemoveIcon fontSize="small" />
                 </Button>
-                <span>{item.quantity}</span>
-                <Button onClick={()=>handleAddButtonClick(item)}>
+                <span>{cartList[key].quantity}</span>
+                <Button onClick={()=>handleAddButtonClick(cartList[key])}>
                 {" "}
                 <AddIcon fontSize="small" />
               </Button>
                 </td>
-                <td>{item.totalprice}</td>
+                <td>{cartList[key].totalprice}</td>
               </tr>
             )
-        })}
+          })}
         <tr>
-          <th id='totalprice' colSpan="4">Total Price: {TotalCartPrice}</th>
+          <th id='totalprice' colSpan="4">Total Price: {totalOrderPrice}</th>
         </tr>
         </tbody>
 </table>

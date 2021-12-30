@@ -14,11 +14,14 @@ const initState = {
         {id: 5, name: 'learn english', price: 500},
         {id: 6, name: 'learn java', price: 600},
     ],
-    carts:   [],
+    // carts:   [],
+    carts:   {},
     itemCount: 0,
     totalCartPrice: 0,
     
 }
+
+
 
 const persistConfig = {
   key: 'root',
@@ -37,75 +40,50 @@ const cartReducer = (state = initState,action)=>{
           
         let sum = state.totalCartPrice;
         sum+=action.payload.totalprice;
-
-        const inCart = state.carts.some(item => item.id === action.payload.id);
-
-        if (inCart) {
-          return {
-            ...state,
-            carts: state.carts.map(item => item.id === action.payload.id ? {
-
-              ...item,
-              quantity: item.quantity + 1,
-              totalprice: item.price + item.price
-            } : item),
-            itemCount: state.itemCount+1,
-            totalCartPrice: sum
-          }
-        } else {
-          return {
-            ...state,
-            carts: [
-
-              ...state.carts,
-              {
-                id: action.payload.id,
-                quantity: action.payload.quantity,
-                name: action.payload.name,
-                price: action.payload.price,
-                totalprice: action.payload.price
-              }
-            ],
-            itemCount: state.itemCount+1,
-            totalCartPrice: sum
-          }
+        let qyt=0
+        if(!state.carts.hasOwnProperty(action.payload.id)){
+          state.carts[action.payload.id] = action.payload;
+          
+          
+        }else{
+            state.carts[action.payload.id].quantity = state.carts[action.payload.id].quantity+1;
+            state.carts[action.payload.id].totalprice = state.carts[action.payload.id].quantity * state.carts[action.payload.id].price;
         }
+            
+          for (var key of Object.keys(state.carts)) {
+            qyt+=state.carts[key].quantity;
+          }
+          return{
+            ...state,
+            carts:{...state.carts},
+            itemCount: qyt
+          }
+          
 
         case TypeAction.INCREMENT_QUANTITY:
-          let item = state.carts.find(item => item.id === action.payload.id);
-          if (item) {
-            return {
-              ...state,
-              carts: state.carts.map(item => item.id === action.payload.id
-                ? {
-                  ...item,
-                  quantity: action.payload.quantity,
-                  totalprice: action.payload.quantity * item.price
-                }
-                : item
-              ),
-              totalCartPrice: state.totalCartPrice + item.price,
-            };
-            
-          }
-        case TypeAction.DECREMENT_QUANTITY:
-          let item2 = state.carts.find(item => item.id === action.payload.id);
           
-          console.log(item2)
-          let less = action.payload.quantity <1 ? 1 :action.payload.quantity ;
-          if (item2) {
-            return {
-              ...state,
-              carts: state.carts.map(item => item.id === action.payload.id
-                ? {
-                  ...item,
-                  quantity: less,
-                  totalprice: less * item2.price
-                }
-                : item
-              ),
-              totalCartPrice: (item2.quantity <= 1 ? state.totalCartPrice : state.totalCartPrice - item2.price),
-            };
+          
+          if(state.carts.hasOwnProperty(action.payload.id)){
+            
+            state.carts[action.payload.id].quantity = state.carts[action.payload.id].quantity+1;
+            state.carts[action.payload.id].totalprice = state.carts[action.payload.id].quantity * state.carts[action.payload.id].price;
+          }
+          return{
+            ...state,
+            carts:{...state.carts},
+            itemCount: state.itemCount+1
+          }
+          
+        case TypeAction.DECREMENT_QUANTITY:
+          
+          if(state.carts.hasOwnProperty(action.payload.id)){
+            state.carts[action.payload.id].quantity = state.carts[action.payload.id].quantity-1;
+            state.carts[action.payload.id].totalprice = state.carts[action.payload.id].quantity * state.carts[action.payload.id].price;
+          }
+          return{
+            ...state,
+            carts:{...state.carts},
+            itemCount: state.itemCount-1
           }
         default:
           return state
