@@ -15,12 +15,53 @@ import Logout from './components/logout';
 import { useDispatch,useSelector  } from 'react-redux';
 import { isLoginSelector } from "../src/redux/selector";
 import { Redirect } from 'react-router-dom';
+import Post from './components/post';
+import { useEffect, useState } from 'react';
+import Paginate from './components/paginate';
+import queryString from 'query-string';
 // import { isLoginSelector } from '../redux/selector';
 
 
 
 function App() {
   const isLoggin = useSelector(isLoginSelector);
+  const [postList, setPostList] = useState([]);
+  const [pagination, setPagination] = useState({
+    _page: 1,
+    _limit: 10,
+    _totalRows: 1
+  });
+  const [filters, setFilters] = useState({
+    _limit: 10,
+    _page: 1,
+  })
+
+  function handlePageChange(newPage){
+    console.log('New Page: ', newPage);
+    setFilters({
+      ...filters,
+      _page: newPage,
+    });
+  }
+  useEffect(()=>{
+    async function fetchPostList(){
+      try {
+        const paramsString = queryString.stringify(filters);
+        const requestUrl = `http://js-post-api.herokuapp.com/api/posts?${paramsString}`;
+        const response = await fetch(requestUrl);
+        
+        const responseJSON = await response.json();
+        console.log({responseJSON});
+        const {data, pagination} = responseJSON;
+        setPostList(data);
+        setPagination(pagination);
+      } catch (error) {
+        console.log('failed to fetch post list',error.message)
+      }
+      
+    }
+    fetchPostList();
+  },[filters]);
   console.log(isLoggin)
   if(isLoggin == false){
     return (
@@ -57,6 +98,10 @@ function App() {
         </Route>
         <Route path="/products">
           <Products />
+        </Route>
+        <Route path="/post">
+          <Post posts={postList}/>
+          <Paginate pagination={pagination} onChangePage={handlePageChange}/>
         </Route>
         <Route path="/carts">
           <Carts />

@@ -45,9 +45,9 @@ export default function NavBars(){
         <NavLink to="products" activeClassName="active" >
             Product
         </NavLink>
-        {/* <NavLink to="login" activeClassName="active">
-            Login
-        </NavLink> */}
+        <NavLink to="post" activeClassName="active">
+            Post
+        </NavLink>
         <NavLink to="logout" activeClassName="active" onClick={(e)=>handleOnCLickLogOut(e)}>
             Logout
         </NavLink>
